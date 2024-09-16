@@ -1,5 +1,6 @@
 "use client";
 
+import { button } from "@/components/button.styles";
 import { createClient }  from "@/utils/supabase/client";
 
 export default function LoginButton(props: { nextUrl?: string }) {
@@ -16,5 +17,5 @@ export default function LoginButton(props: { nextUrl?: string }) {
     });
   };
 
-  return <button onClick={handleLogin}>Login</button>;
+  return <button className={button({ visual: 'solid', size: 'sm', rounded: true })} onClick={handleLogin}>Login</button>;
 }
