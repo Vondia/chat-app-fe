@@ -1,4 +1,4 @@
-import { cva } from '../../styled-system/css'
+import { cva } from '../../styled-system/css';
 
 export const chat = cva({
   base: {
@@ -63,6 +63,11 @@ export const chatMessage = cva({
     margin: '0.4em 0 0',
     width: '50%',
   },
+  variants: {
+    align: {
+      end: { marginLeft: 'auto' },
+    },
+  },
 });
 
 export const chatMessageWrapper = cva({
@@ -70,14 +75,27 @@ export const chatMessageWrapper = cva({
     display: 'flex',
     flexDirection: 'column',
   },
+  variants: {
+    align: {
+      end: { alignItems: 'end' },
+    },
+  },
 });
 
 export const chatMessageBubble = cva({
   base: {
     width: 'fit-content',
-    borderRadius: '0 0.7em 0.7em 0',
-    backgroundColor: '#c6e3fa',
     padding: '0.6em 0.9em',
+  },
+  variants: {
+    color: {
+      gold: { backgroundColor: 'gold' },
+      lightBlue: { backgroundColor: '#c6e3fa' },
+    },
+    radius: {
+      left: { borderRadius: '0.7em 0 0 0.7em' },
+      right: { borderRadius: '0 0.7em 0.7em 0' },
+    },
   },
 });
 
@@ -94,22 +112,6 @@ export const chatMessageAuthor = cva({
     fontSize: '0.81em',
     fontWeight: '600',
     marginBottom: '2px',
-  },
-});
-
-export const outgoing = cva({
-  base: {
-    marginLeft: 'auto',
-    '& .chat-message-wrapper': {
-      alignItems: 'end',
-    },
-    '& .chat-message-bubble': {
-      backgroundColor: '#6bb9f2',
-      borderRadius: '0.7em 0 0 0.7em',
-    },
-    '& .chat-message-author': {
-      display: 'none',
-    },
   },
 });
 
