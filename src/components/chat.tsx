@@ -16,8 +16,8 @@ interface ChatProps {
 
 const SystemMessage: Message = {
   id: 1,
-  body: "Welcome to the Nest Chat app",
-  author: "Bot",
+  body: 'Welcome to the Nest Chat app',
+  author: 'Bot',
 };
 
 const socket: Socket = io('http://localhost:4000', { autoConnect: false });
@@ -67,21 +67,31 @@ export function Chat({ currentUser }: ChatProps) {
         <LogoutButton />
       </div>
       <div className={styles.chatMessageList()}>
-        {messages.map((message, idx) => (
-          <div
-            key={idx}
-            className={`${styles.chatMessage()} ${
-              currentUser === message.author ? styles.outgoing() : ''
-            }`}
-          >
-            <div className={styles.chatMessageWrapper()}>
-              <span className={styles.chatMessageAuthor()}>{message.author }</span>
-              <div className={styles.chatMessageBubble()}>
-                <span className={styles.chatMessageBody()}>{message.body}</span>
+        {messages.map((message, idx) => {
+          const isUserMessage = currentUser === message.author;
+          return (
+            <div
+              key={idx}
+              className={`${styles.chatMessage({ align: isUserMessage ? 'end' : undefined })}`}
+            >
+              <div
+                className={styles.chatMessageWrapper({ align: isUserMessage ? 'end' : undefined })}
+              >
+                <span className={styles.chatMessageAuthor()}>
+                  {isUserMessage ? 'You' : message.author}
+                </span>
+                <div
+                  className={styles.chatMessageBubble({
+                    color: isUserMessage ? 'gold' : 'lightBlue',
+                    radius: isUserMessage ? 'left' : 'right',
+                  })}
+                >
+                  <span className={styles.chatMessageBody()}>{message.body}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <div className={styles.chatComposer()}>
         <input
