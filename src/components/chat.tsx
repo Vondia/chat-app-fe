@@ -5,26 +5,34 @@ import * as styles from './chat.styles'; // Importing all styles under the `styl
 import LogoutButton from '@/app/login/logout-button';
 
 interface Message {
-  id: number;
-  body: string;
-  author: string;
+
+  message: string;
+  time: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+
+}
+
+interface ChatMessage {
+  id: string,
+  message: Message
 }
 
 interface ChatProps {
-  currentUser: string;
+  currentUser: { email: string; name: string };
+  title: string;
+  existingMessages: Message[];
+  id: string;
 }
 
-const SystemMessage: Message = {
-  id: 1,
-  body: 'Welcome to the Nest Chat app',
-  author: 'Bot',
-};
+const socket: Socket = io(process.env.NEXT_PUBLIC_GATEWAY_URL!, { autoConnect: false });
 
-const socket: Socket = io('http://localhost:4000', { autoConnect: false });
-
-export function Chat({ currentUser }: ChatProps) {
+export function Chat({ currentUser, title, existingMessages, id }: ChatProps) {
   const [inputValue, setInputValue] = useState<string>('');
-  const [messages, setMessages] = useState<Message[]>([SystemMessage]);
+  const [messages, setMessages] = useState<Message[]>(existingMessages);
 
   useEffect(() => {
     socket.connect();
@@ -37,9 +45,10 @@ export function Chat({ currentUser }: ChatProps) {
       console.log('Socket disconnected');
     });
 
-    socket.on('chat', (newMessage: Message) => {
+    socket.on('chat', (newMessage: ChatMessage) => {
       console.log('New message added', newMessage);
-      setMessages((previousMessages) => [...previousMessages, newMessage]);
+      if(newMessage.id !== id) return;
+      setMessages((previousMessages) => [...previousMessages, newMessage.message]);
     });
 
     return () => {
@@ -47,12 +56,17 @@ export function Chat({ currentUser }: ChatProps) {
       socket.off('disconnect');
       socket.off('chat');
     };
-  }, []);
+  }, [id]);
 
   const handleSendMessage = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter' || inputValue.trim().length === 0) return;
 
-    socket.emit('chat', { author: currentUser, body: inputValue.trim() });
+    socket.emit('chat', {
+      author: currentUser,
+      body: inputValue.trim(),
+      time: new Date().toISOString(),
+      id: id,
+    });
     setInputValue('');
   };
 
@@ -63,12 +77,12 @@ export function Chat({ currentUser }: ChatProps) {
   return (
     <div className={styles.chat()}>
       <div className={styles.chatHeader()}>
-        <span>Nest Chat App</span>
+        <span>{title}</span>
         <LogoutButton />
       </div>
       <div className={styles.chatMessageList()}>
         {messages.map((message, idx) => {
-          const isUserMessage = currentUser === message.author;
+          const isUserMessage = currentUser.email === message.user?.email;
           return (
             <div
               key={idx}
@@ -78,7 +92,7 @@ export function Chat({ currentUser }: ChatProps) {
                 className={styles.chatMessageWrapper({ align: isUserMessage ? 'end' : undefined })}
               >
                 <span className={styles.chatMessageAuthor()}>
-                  {isUserMessage ? 'You' : message.author}
+                  {isUserMessage ? 'You' : message.user?.name}
                 </span>
                 <div
                   className={styles.chatMessageBubble({
@@ -86,7 +100,7 @@ export function Chat({ currentUser }: ChatProps) {
                     radius: isUserMessage ? 'left' : 'right',
                   })}
                 >
-                  <span className={styles.chatMessageBody()}>{message.body}</span>
+                  <span className={styles.chatMessageBody()}>{message.message}</span>
                 </div>
               </div>
             </div>
