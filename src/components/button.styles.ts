@@ -8,7 +8,6 @@ export const button = cva({
     visual: {
       solid: { bg: 'blue.700', color: 'white' },
       outline: { borderWidth: '1px', borderColor: 'blue.700' },
-
     },
     rounded: {
       true: { borderRadius: '1rem' }

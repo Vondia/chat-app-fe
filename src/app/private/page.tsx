@@ -13,7 +13,7 @@ export default async function PrivatePage() {
 
   return (
     <>
-      <img src={data.user.user_metadata?.picture}></img>
+      <img src={data.user.user_metadata?.picture} alt="Profile image"></img>
       <p>Hello {data.user.user_metadata?.full_name}</p>
       <p>{data.user.email}</p>
       <LogoutButton />
