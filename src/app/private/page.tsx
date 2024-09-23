@@ -11,6 +11,7 @@ export default async function PrivatePage() {
     redirect("/login");
   }
 
+
   return (
     <>
       <img src={data.user.user_metadata?.picture} alt="Profile image"></img>

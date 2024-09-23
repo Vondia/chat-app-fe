@@ -48,9 +48,9 @@ export const chatMessageList = cva({
     flexDirection: 'column',
     height: 'calc(100vh - 48px)',
     width: 'auto',
-    overflow: 'auto',
+    overflow: 'scroll',
     color: 'rgba(0, 0, 0, 0.87)',
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     padding: '12px 8px',
   },
 });

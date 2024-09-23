@@ -2,7 +2,10 @@ import { cva } from '../../styled-system/css'
  
 export const button = cva({
   base: {
-    display: 'flex'
+    display: 'flex',
+    marginBottom: '1rem',
+    width: '150px',
+    justifyContent: 'space-around',
   },
   variants: {
     visual: {
